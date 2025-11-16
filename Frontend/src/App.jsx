@@ -11,28 +11,17 @@ import NotesApp from "./components/NotesApp ";
 import Signup from "./components/signup";
 
 const App = () => {
-  // ✅ Manage auth state
-  const [isAuth, setIsAuth] = useState(true);
-
-  // ✅ Check login status from localStorage
-  useEffect(() => {
-    const loggedIn = localStorage.getItem("isAuth");
-    if (loggedIn === "true") {
-      setIsAuth(true);
-    }
-  }, []);
-
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Navigate to="/login" />} />
         <Route path="/signup" element={<Signup />} />
-        <Route path="/login" element={<Login setIsAuth={setIsAuth} />} />
+        <Route path="/login" element={<Login />} />
         {/* ✅ Protected Route */}
         <Route
           path="/notes"
           element={
-            <ProtectedRoute isAuth={isAuth}>
+            <ProtectedRoute>
               <NotesApp />
             </ProtectedRoute>
           }

@@ -1,7 +1,11 @@
+import axios from "axios";
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const Signup = () => {
+  const API_URL = import.meta.env.VITE_API_URL;
+
   // ✅ Controlled Inputs using useState
   const [formData, setFormData] = useState({
     username: "",
@@ -35,9 +39,22 @@ const Signup = () => {
       return;
     }
 
-    console.log(formData);
-    setSuccess("✅ Account created successfully!");
-    setFormData({ username: "", email: "", password: "" });
+    axios
+      .post(`${API_URL}/api/auth/signup`, {
+        username: username.trim(),
+        email: email.trim(),
+        password: password.trim(),
+      })
+      .then((response) => {
+        Cookies.set("token", response.data.token);
+        console.log(response.data);
+        setSuccess("✅ Account created successfully!");
+        setFormData({ username: "", email: "", password: "" });
+      })
+      .catch((error) => {
+        console.error("Error during signup:", error);
+        setError("❌ Signup failed. Please try again.");
+      });
   };
 
   return (

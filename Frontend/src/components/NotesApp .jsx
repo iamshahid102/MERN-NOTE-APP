@@ -46,18 +46,25 @@ const NotesApp = () => {
 
     if (editId !== null) {
       // Update existing note
-      axios.put(
-        `${API_URL}/api/notes/${editId}`,
-        { title, desc },
-        {
-          headers: {
-            "x-auth-token": `${token}`,
-          },
-        }
-      );
-      getNotes();
-      setEditId(null);
-      setMessage("✅ Note updated successfully!");
+      axios
+        .put(
+          `${API_URL}/api/notes/${editId}`,
+          { title, desc },
+          {
+            headers: {
+              "x-auth-token": `${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          getNotes();
+          setEditId(null);
+          setMessage("✅ Note updated successfully!");
+          console.log(response.data);
+        })
+        .catch((error) => {
+          console.error("Error updating note:", error);
+        });
     } else {
       // Add new note
       axios
@@ -94,13 +101,20 @@ const NotesApp = () => {
 
   // ✅ Delete Note
   const handleDelete = (id) => {
-    axios.delete(`${API_URL}/api/notes/${id}`, {
-      headers: {
-        "x-auth-token": `${token}`,
-      },
-    });
-    setNotes(updated);
-    setMessage("🗑️ Note deleted.");
+    axios
+      .delete(`${API_URL}/api/notes/${id}`, {
+        headers: {
+          "x-auth-token": `${token}`,
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        getNotes();
+        setMessage("🗑️ Note deleted.");
+      })
+      .catch((error) => {
+        console.error("Error deleting note:", error);
+      });
   };
 
   // ✅ Clear All Notes
@@ -195,13 +209,13 @@ const NotesApp = () => {
                     {note.title}
                   </h3>
                   <p className="text-gray-600 text-sm mt-1 wrap-break-word">
-                    {note.desc}
+                    {note.description}
                   </p>
 
                   <div className="flex justify-end gap-3 mt-3">
                     <button
                       onClick={() =>
-                        handleEdit(note._id, note.title, note.desc)
+                        handleEdit(note._id, note.title, note.description)
                       }
                       className="text-sm text-blue-600 hover:underline"
                     >

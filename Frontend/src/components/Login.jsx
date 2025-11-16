@@ -47,6 +47,7 @@ const Login = () => {
         console.log(response.data);
         setSuccess("✅ Login successful!");
         Cookies.set("token", response.data.token);
+        <NavLink to="/notes" />;
       })
       .catch((error) => {
         console.error("Error during login:", error);
