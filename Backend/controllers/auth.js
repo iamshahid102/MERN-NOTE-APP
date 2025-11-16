@@ -1,7 +1,9 @@
-import bcrypt from 'bcryptjs';
-import jwt from 'jsonwebtoken';
-import { validationResult } from 'express-validator';
-import User from '../schema/User.js';
+import bcrypt from "bcryptjs";
+import jwt from "jsonwebtoken";
+import { validationResult } from "express-validator";
+import User from "../schema/User.js";
+import dotenv from "dotenv";
+dotenv.config();
 
 export const signup = async (req, res) => {
   const errors = validationResult(req);
@@ -10,11 +12,11 @@ export const signup = async (req, res) => {
   }
 
   try {
-    const { name, email, password, phone } = req.body;
+    const { name, email, password } = req.body;
 
     let user = await User.findOne({ email });
     if (user) {
-      return res.status(400).json({ message: 'User already exists' });
+      return res.status(400).json({ message: "User already exists" });
     }
 
     const salt = await bcrypt.genSalt(10);
@@ -24,21 +26,20 @@ export const signup = async (req, res) => {
       name,
       email,
       password: hashedPassword,
-      phone,
     });
 
     await user.save();
 
     const payload = {
       user: {
-        id: user.id,
+        id: user._id,
       },
     };
 
     jwt.sign(
       payload,
       process.env.JWT_SECRET,
-      { expiresIn: '1h' },
+      { expiresIn: "1h" },
       (err, token) => {
         if (err) throw err;
         res.status(201).json({ token });
@@ -60,25 +61,25 @@ export const login = async (req, res) => {
     const user = await User.findOne({ email });
 
     if (!user) {
-      return res.status(400).json({ message: 'Invalid credentials' });
+      return res.status(400).json({ message: "Invalid credentials" });
     }
 
     const isMatch = await bcrypt.compare(password, user.password);
 
     if (!isMatch) {
-      return res.status(400).json({ message: 'Invalid credentials' });
+      return res.status(400).json({ message: "Invalid credentials" });
     }
 
     const payload = {
       user: {
-        id: user.id,
+        id: user._id,
       },
     };
 
     jwt.sign(
       payload,
       process.env.JWT_SECRET,
-      { expiresIn: '1h' },
+      { expiresIn: "1h" },
       (err, token) => {
         if (err) throw err;
         res.json({ token });

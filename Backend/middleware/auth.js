@@ -1,12 +1,10 @@
-import jwt from 'jsonwebtoken';
+import jwt from "jsonwebtoken";
 
 const auth = (req, res, next) => {
-  const token = req.header('x-auth-token');
-  console.log(token);
-  
+  const token = req.header("x-auth-token");
 
   if (!token) {
-    return res.status(401).json({ message: 'No token, authorization denied' });
+    return res.status(401).json({ message: "No token, authorization denied" });
   }
 
   try {
@@ -14,7 +12,7 @@ const auth = (req, res, next) => {
     req.user = decoded.user;
     next();
   } catch (error) {
-    res.status(401).json({ message: 'Token is not valid' });
+    res.status(401).json({ message: "Token is not valid" });
   }
 };
 
