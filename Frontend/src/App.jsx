@@ -5,18 +5,18 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import Signup from "./components/signup";
-import Login from "./components/Login";
 import NotesApp from "./components/NotesApp";
 import ProtectedRoute from "./components/ProtectedRoute";
+import SignUp from "./components/Auth/SignUp";
+import Login from "./components/Auth/Login";
 
 const App = () => {
   return (
     <Router>
       <Routes>
         <Route path="/" element={<Navigate to="/login" />} />
-        <Route path="/signup" element={<Signup/>} />
-        <Route path="/login" element={<Login/>} />
+        <Route path="/signup" element={<SignUp />} />
+        <Route path="/login" element={<Login />} />
         {/* ✅ Protected Route */}
         <Route
           path="/notes"

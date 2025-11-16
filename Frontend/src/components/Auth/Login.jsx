@@ -1,6 +1,6 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { NavLink } from "react-router-dom";
+import { Navigate, NavLink } from "react-router-dom";
 import Cookies from "js-cookie";
 
 const Login = () => {
@@ -47,7 +47,7 @@ const Login = () => {
         console.log(response.data);
         setSuccess("✅ Login successful!");
         Cookies.set("token", response.data.token);
-        <NavLink to="/notes" />;
+        <Navigate to="/notes" replace />;
       })
       .catch((error) => {
         console.error("Error during login:", error);

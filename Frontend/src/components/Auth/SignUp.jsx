@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
 import Cookies from "js-cookie";
 
-const Signup = () => {
+const SignUp = () => {
   const API_URL = import.meta.env.VITE_API_URL;
 
   // ✅ Controlled Inputs using useState
@@ -153,4 +153,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default SignUp;
