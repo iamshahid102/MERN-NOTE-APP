@@ -1,8 +1,11 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { NavLink } from "react-router-dom";
+import Cookies from "js-cookie";
 
 const Login = () => {
+  const API_URL = import.meta.env.VITE_API_URL;
+
   // ✅ Controlled inputs
   const [formData, setFormData] = useState({
     email: "",
@@ -35,30 +38,20 @@ const Login = () => {
       return;
     }
 
-    axios.post("https://shahids-mern-note-app.vercel.app/api/auth/login", {
-      email,
-      password,
-    })
-    .then((response) => {
-      console.log(response.data);
-      setSuccess("✅ Login successful!");
-      // You can set isAuth to true here if needed
-      
-    })
-    .catch((error) => {
-      console.error("Error during login:", error);
-      setError("❌ Invalid email or password.");
-    });
-
-
-    // ✅ Dummy authentication simulation
-    // if (email === "test@example.com" && password === "123456") {
-    //   setSuccess("✅ Login successful!");
-    // } else {
-    //   setError("❌ Invalid email or password.");
-    // }
-
-    // console.log(formData);
+    axios
+      .post(`${API_URL}/api/auth/login`, {
+        email: email.trim(),
+        password: password.trim(),
+      })
+      .then((response) => {
+        console.log(response.data);
+        setSuccess("✅ Login successful!");
+        Cookies.set("token", response.data.token);
+      })
+      .catch((error) => {
+        console.error("Error during login:", error);
+        setError("❌ Invalid email or password.");
+      });
   };
 
   return (

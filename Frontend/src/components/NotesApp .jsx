@@ -1,26 +1,40 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
+import Cookies from "js-cookie";
 
 const NotesApp = () => {
   const [notes, setNotes] = useState([]);
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
-  const [editIndex, setEditIndex] = useState(null);
+  const [editId, setEditId] = useState(null);
   const [message, setMessage] = useState("");
+  // Get a cookie
+  let token;
 
   const API_URL = import.meta.env.VITE_API_URL;
 
+  const getNotes = () => {
+    axios
+      .get(`${API_URL}/api/notes`, {
+        headers: {
+          "x-auth-token": `${token}`,
+        },
+      })
+      .then((response) => {
+        setNotes(response.data);
+        console.log(response.data);
+      })
+      .catch((error) => {
+        console.error("Error fetching notes:", error);
+      });
+  };
+
   // ✅ Fetch notes from backend (Commented out for now)
-  // useEffect(() => {
-  //   axios
-  //     .get(`${API_URL}/api/notes`)
-  //     .then((response) => {
-  //       console.log(response.data);
-  //     })
-  //     .catch((error) => {
-  //       console.error("Error fetching notes:", error);
-  //     });
-  // }, []);
+  useEffect(() => {
+    token = Cookies.get("token");
+
+    getNotes();
+  }, []);
 
   // ✅ Add or Update Note
   const handleAddNote = (e) => {
@@ -30,17 +44,40 @@ const NotesApp = () => {
       return;
     }
 
-    if (editIndex !== null) {
+    if (editId !== null) {
       // Update existing note
-      const updated = [...notes];
-      updated[editIndex] = { title, desc };
-      setNotes(updated);
-      setEditIndex(null);
+      axios.put(
+        `${API_URL}/api/notes/${editId}`,
+        { title, desc },
+        {
+          headers: {
+            "x-auth-token": `${token}`,
+          },
+        }
+      );
+      getNotes();
+      setEditId(null);
       setMessage("✅ Note updated successfully!");
     } else {
       // Add new note
-      setNotes([...notes, { title, desc }]);
-      setMessage("✅ Note added successfully!");
+      axios
+        .post(
+          `${API_URL}/api/notes`,
+          { title, desc },
+          {
+            headers: {
+              "x-auth-token": `${token}`,
+            },
+          }
+        )
+        .then((response) => {
+          console.log(response.data);
+          getNotes();
+          setMessage("✅ Note added successfully!");
+        })
+        .catch((error) => {
+          console.error("Error adding note:", error);
+        });
     }
 
     setTitle("");
@@ -48,16 +85,20 @@ const NotesApp = () => {
   };
 
   // ✅ Edit Note
-  const handleEdit = (index) => {
-    setTitle(notes[index].title);
-    setDesc(notes[index].desc);
-    setEditIndex(index);
+  const handleEdit = (id, title, Description) => {
+    setTitle(title);
+    setDesc(Description);
+    setEditId(id);
     setMessage("");
   };
 
   // ✅ Delete Note
-  const handleDelete = (index) => {
-    const updated = notes.filter((_, i) => i !== index);
+  const handleDelete = (id) => {
+    axios.delete(`${API_URL}/api/notes/${id}`, {
+      headers: {
+        "x-auth-token": `${token}`,
+      },
+    });
     setNotes(updated);
     setMessage("🗑️ Note deleted.");
   };
@@ -73,8 +114,12 @@ const NotesApp = () => {
       <div className="bg-white shadow-2xl rounded-2xl p-6 sm:p-8 w-full sm:w-[600px]">
         <h1 className="text-2xl font-bold text-center mb-6 text-gray-800 flex justify-between items-center">
           📝 Notes App
-
-          <button className="text-sm bg-red-700 p-1 text-white cursor-pointer" >Logout</button>
+          <button
+            className="text-sm bg-red-700 p-1 text-white cursor-pointer"
+            onClick={() => Cookies.remove("token")}
+          >
+            Logout
+          </button>
         </h1>
 
         {message && (
@@ -121,7 +166,7 @@ const NotesApp = () => {
             type="submit"
             className="w-full bg-indigo-600 text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 transition"
           >
-            {editIndex !== null ? "Update Note" : "Add Note"}
+            {editId !== null ? "Update Note" : "Add Note"}
           </button>
         </form>
 
@@ -141,9 +186,9 @@ const NotesApp = () => {
             </div>
 
             <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-4">
-              {notes.map((note, index) => (
+              {notes.map((note) => (
                 <div
-                  key={index}
+                  key={note._id}
                   className="bg-gray-300 p-4 rounded-xl shadow-sm hover:shadow-md transition"
                 >
                   <h3 className="font-bold text-gray-800 wrap-break-word">
@@ -155,13 +200,15 @@ const NotesApp = () => {
 
                   <div className="flex justify-end gap-3 mt-3">
                     <button
-                      onClick={() => handleEdit(index)}
+                      onClick={() =>
+                        handleEdit(note._id, note.title, note.desc)
+                      }
                       className="text-sm text-blue-600 hover:underline"
                     >
                       Edit
                     </button>
                     <button
-                      onClick={() => handleDelete(index)}
+                      onClick={() => handleDelete(note._id)}
                       className="text-sm text-red-600 hover:underline"
                     >
                       Delete
