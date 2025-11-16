@@ -5,10 +5,10 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import Login from "./components/Login";
-import ProtectedRoute from "./components/ProtectedRoute";
-import NotesApp from "./components/NotesApp ";
-import Signup from "./components/signup";
+import Login from "./components/Login.jsx";
+import Signup from "./components/signup.jsx";
+import NotesApp from "./components/NotesApp.jsx";
+import ProtectedRoute from "./components/ProtectedRoute.jsx";
 
 const App = () => {
   return (
