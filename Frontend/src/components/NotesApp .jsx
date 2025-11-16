@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
 
 const NotesApp = () => {
   const [notes, setNotes] = useState([]);
@@ -6,6 +7,20 @@ const NotesApp = () => {
   const [desc, setDesc] = useState("");
   const [editIndex, setEditIndex] = useState(null);
   const [message, setMessage] = useState("");
+
+  const API_URL = import.meta.env.VITE_API_URL;
+
+  // ✅ Fetch notes from backend (Commented out for now)
+  // useEffect(() => {
+  //   axios
+  //     .get(`${API_URL}/api/notes`)
+  //     .then((response) => {
+  //       console.log(response.data);
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error fetching notes:", error);
+  //     });
+  // }, []);
 
   // ✅ Add or Update Note
   const handleAddNote = (e) => {
@@ -56,8 +71,10 @@ const NotesApp = () => {
   return (
     <div className="flex justify-center items-center min-h-screen bg-linear-to-br from-indigo-500 to-blue-600 p-4">
       <div className="bg-white shadow-2xl rounded-2xl p-6 sm:p-8 w-full sm:w-[600px]">
-        <h1 className="text-2xl font-bold text-center mb-6 text-gray-800">
+        <h1 className="text-2xl font-bold text-center mb-6 text-gray-800 flex justify-between items-center">
           📝 Notes App
+
+          <button className="text-sm bg-red-700 p-1 text-white cursor-pointer" >Logout</button>
         </h1>
 
         {message && (
@@ -127,10 +144,14 @@ const NotesApp = () => {
               {notes.map((note, index) => (
                 <div
                   key={index}
-                  className="bg-gray-100 p-4 rounded-xl shadow-sm hover:shadow-md transition"
+                  className="bg-gray-300 p-4 rounded-xl shadow-sm hover:shadow-md transition"
                 >
-                  <h3 className="font-bold text-gray-800">{note.title}</h3>
-                  <p className="text-gray-600 text-sm mt-1">{note.desc}</p>
+                  <h3 className="font-bold text-gray-800 wrap-break-word">
+                    {note.title}
+                  </h3>
+                  <p className="text-gray-600 text-sm mt-1 wrap-break-word">
+                    {note.desc}
+                  </p>
 
                   <div className="flex justify-end gap-3 mt-3">
                     <button

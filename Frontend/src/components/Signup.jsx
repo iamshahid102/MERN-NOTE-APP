@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
 
 const Signup = () => {
   // ✅ Controlled Inputs using useState
@@ -123,12 +124,12 @@ const Signup = () => {
 
         <p className="text-sm text-center text-gray-600 mt-4">
           You have an account?{" "}
-          <a
-            href="/signup"
+          <NavLink
+            to="/login"
             className="text-indigo-600 font-semibold hover:underline"
           >
             Login
-          </a>
+          </NavLink>
         </p>
       </div>
     </div>

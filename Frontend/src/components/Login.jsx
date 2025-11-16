@@ -1,4 +1,6 @@
+import axios from "axios";
 import React, { useState } from "react";
+import { NavLink } from "react-router-dom";
 
 const Login = () => {
   // ✅ Controlled inputs
@@ -33,14 +35,30 @@ const Login = () => {
       return;
     }
 
-    // ✅ Dummy authentication simulation
-    if (email === "test@example.com" && password === "123456") {
+    axios.post("https://shahids-mern-note-app.vercel.app/api/auth/login", {
+      email,
+      password,
+    })
+    .then((response) => {
+      console.log(response.data);
       setSuccess("✅ Login successful!");
-    } else {
+      // You can set isAuth to true here if needed
+      
+    })
+    .catch((error) => {
+      console.error("Error during login:", error);
       setError("❌ Invalid email or password.");
-    }
+    });
 
-    console.log(formData);
+
+    // ✅ Dummy authentication simulation
+    // if (email === "test@example.com" && password === "123456") {
+    //   setSuccess("✅ Login successful!");
+    // } else {
+    //   setError("❌ Invalid email or password.");
+    // }
+
+    // console.log(formData);
   };
 
   return (
@@ -110,12 +128,12 @@ const Login = () => {
 
         <p className="text-sm text-center text-gray-600 mt-4">
           Don’t have an account?{" "}
-          <a
-            href="/signup"
+          <NavLink
+            to="/signup"
             className="text-indigo-600 font-semibold hover:underline"
           >
             Sign Up
-          </a>
+          </NavLink>
         </p>
       </div>
     </div>

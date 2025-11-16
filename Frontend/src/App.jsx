@@ -5,14 +5,14 @@ import {
   Route,
   Navigate,
 } from "react-router-dom";
-import Signup from "./components/Signup";
 import Login from "./components/Login";
 import ProtectedRoute from "./components/ProtectedRoute";
 import NotesApp from "./components/NotesApp ";
+import Signup from "./components/signup";
 
 const App = () => {
   // ✅ Manage auth state
-  const [isAuth, setIsAuth] = useState(false);
+  const [isAuth, setIsAuth] = useState(true);
 
   // ✅ Check login status from localStorage
   useEffect(() => {
