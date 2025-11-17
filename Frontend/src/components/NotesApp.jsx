@@ -12,7 +12,8 @@ const NotesApp = () => {
   // Get a cookie
   let token;
 
-  const API_URL = import.meta.env.VITE_API_URL;
+  // const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = "http://localhost:5000";
 
   const getNotes = () => {
     axios
@@ -30,9 +31,10 @@ const NotesApp = () => {
       });
   };
 
-  // ✅ Fetch notes from backend (Commented out for now)
+  // ✅ Fetch notes from backend on component mount
   useEffect(() => {
     token = Cookies.get("token");
+    console.log("cookies token is here", token);
 
     getNotes();
   }, []);
@@ -68,6 +70,7 @@ const NotesApp = () => {
         });
     } else {
       // Add new note
+
       axios
         .post(
           `${API_URL}/api/notes`,
@@ -227,7 +230,7 @@ const NotesApp = () => {
                     </button>
                     <button
                       onClick={() => handleDelete(note._id)}
-                      className="text-sm text-red-600 hover:underline"
+                      className="text-sm text-red-600 hover:underline cursor-pointer"
                     >
                       Delete
                     </button>
