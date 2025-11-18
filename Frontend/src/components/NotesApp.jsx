@@ -25,7 +25,6 @@ const NotesApp = () => {
       })
       .then((response) => {
         setNotes(response.data);
-        console.log(response.data);
       })
       .catch((error) => {
         console.error("Error fetching notes:", error);
@@ -120,7 +119,6 @@ const NotesApp = () => {
         },
       })
       .then((response) => {
-        console.log(response.data);
         getNotes();
         setMessage("🗑️ Note deleted.");
       })
@@ -140,7 +138,6 @@ const NotesApp = () => {
         },
       })
       .then((response) => {
-        console.log(response.data);
         setMessage("🧹 All notes cleared!");
         getNotes();
       })
