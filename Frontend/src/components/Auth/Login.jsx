@@ -4,7 +4,7 @@ import { Navigate, NavLink } from "react-router-dom";
 import Cookies from "js-cookie";
 
 const Login = () => {
-  // const API_URL = import.meta.env.VITE_API_URL;
+  const API_URL = import.meta.env.VITE_API_URL;
 
   // ✅ Controlled inputs
   const [formData, setFormData] = useState({
@@ -39,7 +39,7 @@ const Login = () => {
     }
 
     axios
-      .post(`http://localhost:5000/api/auth/login`, {
+      .post(`${API_URL}/api/auth/login`, {
         email: email.trim(),
         password: password.trim(),
       })

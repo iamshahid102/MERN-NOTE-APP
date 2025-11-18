@@ -4,8 +4,7 @@ import { NavLink } from "react-router-dom";
 import Cookies from "js-cookie";
 
 const SignUp = () => {
-  // const API_URL = import.meta.env.VITE_API_URL;
-  const API_URL = "http://localhost:5000";
+  const API_URL = import.meta.env.VITE_API_URL;
 
   // ✅ Controlled Inputs using useState
   const [formData, setFormData] = useState({

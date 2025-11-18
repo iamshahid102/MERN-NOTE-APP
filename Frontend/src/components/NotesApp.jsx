@@ -12,10 +12,11 @@ const NotesApp = () => {
   // Get a cookie
   let token;
 
-  // const API_URL = import.meta.env.VITE_API_URL;
-  const API_URL = "http://localhost:5000";
+  const API_URL = import.meta.env.VITE_API_URL;
 
+  // ✅ Fetch Notes from Backend
   const getNotes = () => {
+    token = Cookies.get("token");
     axios
       .get(`${API_URL}/api/notes`, {
         headers: {
@@ -33,15 +34,18 @@ const NotesApp = () => {
 
   // ✅ Fetch notes from backend on component mount
   useEffect(() => {
-    token = Cookies.get("token");
-    console.log("cookies token is here", token);
-
     getNotes();
+    return () => {
+      getNotes();
+    };
   }, []);
 
   // ✅ Add or Update Note
   const handleAddNote = (e) => {
     e.preventDefault();
+
+    token = Cookies.get("token");
+
     if (!title.trim() || !desc.trim()) {
       setMessage("⚠️ Please fill in both fields.");
       return;
@@ -52,7 +56,7 @@ const NotesApp = () => {
       axios
         .put(
           `${API_URL}/api/notes/${editId}`,
-          { title, desc },
+          { title, description: desc },
           {
             headers: {
               "x-auth-token": `${token}`,
@@ -71,10 +75,12 @@ const NotesApp = () => {
     } else {
       // Add new note
 
+      console.log("cookies token is here", token);
+
       axios
         .post(
           `${API_URL}/api/notes`,
-          { title, desc },
+          { title: title.trim(), description: desc.trim() },
           {
             headers: {
               "x-auth-token": `${token}`,
@@ -105,6 +111,8 @@ const NotesApp = () => {
 
   // ✅ Delete Note
   const handleDelete = (id) => {
+    token = Cookies.get("token");
+
     axios
       .delete(`${API_URL}/api/notes/${id}`, {
         headers: {
@@ -123,8 +131,22 @@ const NotesApp = () => {
 
   // ✅ Clear All Notes
   const handleClearAll = () => {
-    setNotes([]);
-    setMessage("🧹 All notes cleared!");
+    token = Cookies.get("token");
+
+    axios
+      .delete(`${API_URL}/api/notes`, {
+        headers: {
+          "x-auth-token": `${token}`,
+        },
+      })
+      .then((response) => {
+        console.log(response.data);
+        setMessage("🧹 All notes cleared!");
+        getNotes();
+      })
+      .catch((error) => {
+        console.error("Error clearing notes:", error);
+      });
   };
 
   return (
@@ -185,7 +207,7 @@ const NotesApp = () => {
 
           <button
             type="submit"
-            className="w-full bg-indigo-600 text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 transition"
+            className="w-full cursor-pointer bg-indigo-600 text-white py-2 rounded-lg font-semibold hover:bg-indigo-700 transition"
           >
             {editId !== null ? "Update Note" : "Add Note"}
           </button>
@@ -200,7 +222,7 @@ const NotesApp = () => {
               </h2>
               <button
                 onClick={handleClearAll}
-                className="text-sm text-red-500 hover:text-red-700 font-medium"
+                className="text-sm cursor-pointer text-red-500 hover:text-red-700 font-medium"
               >
                 Clear All
               </button>
@@ -224,7 +246,7 @@ const NotesApp = () => {
                       onClick={() =>
                         handleEdit(note._id, note.title, note.description)
                       }
-                      className="text-sm text-blue-600 hover:underline"
+                      className="text-sm text-blue-600 hover:underline cursor-pointer"
                     >
                       Edit
                     </button>
