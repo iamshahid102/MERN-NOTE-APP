@@ -153,7 +153,6 @@ const NotesApp = () => {
             className="text-sm bg-red-700 p-1 text-white cursor-pointer"
             onClick={() => {
               Cookies.remove("token");
-              // redirect after success
               navigate("/login");
             }}
           >

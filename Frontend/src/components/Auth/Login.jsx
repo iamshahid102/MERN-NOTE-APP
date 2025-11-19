@@ -1,12 +1,10 @@
 import axios from "axios";
-import React, { use, useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 
 const Login = () => {
   const navigate = useNavigate();
-
-  const API_URL = import.meta.env.VITE_API_URL;
 
   useEffect(() => {
     const token = Cookies.get("token");
@@ -14,6 +12,8 @@ const Login = () => {
       navigate("/notes");
     }
   }, [navigate]);
+
+  const API_URL = import.meta.env.VITE_API_URL;
 
   // ✅ Controlled inputs
   const [formData, setFormData] = useState({
@@ -56,7 +56,6 @@ const Login = () => {
         setSuccess("✅ Login successful!");
         Cookies.set("token", response.data.token);
         setFormData({ email: "", password: "" });
-        // redirect after success
         navigate("/notes");
       })
       .catch((error) => {

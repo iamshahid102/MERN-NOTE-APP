@@ -1,10 +1,9 @@
 import axios from "axios";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import Cookies from "js-cookie";
 
 const SignUp = () => {
-  const API_URL = import.meta.env.VITE_API_URL;
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -13,6 +12,8 @@ const SignUp = () => {
       navigate("/notes");
     }
   }, [navigate]);
+
+  const API_URL = import.meta.env.VITE_API_URL;
 
   // ✅ Controlled Inputs using useState
   const [formData, setFormData] = useState({
@@ -57,6 +58,8 @@ const SignUp = () => {
         Cookies.set("token", response.data.token);
         setSuccess("✅ Account created successfully!");
         setFormData({ username: "", email: "", password: "" });
+
+        navigate("/login");
       })
       .catch((error) => {
         console.error("Error during signup:", error);
