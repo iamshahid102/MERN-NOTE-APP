@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const NotesApp = () => {
   const [notes, setNotes] = useState([]);
@@ -9,6 +9,7 @@ const NotesApp = () => {
   const [desc, setDesc] = useState("");
   const [editId, setEditId] = useState(null);
   const [message, setMessage] = useState("");
+const navigate= useNavigate();
   // Get a cookie
   let token;
 
@@ -155,7 +156,7 @@ const NotesApp = () => {
             className="text-sm bg-red-700 p-1 text-white cursor-pointer"
             onClick={() => {
               Cookies.remove("token");
-              <Navigate to="/login" replace />;
+              navigate("/login");
             }}
           >
             Logout
