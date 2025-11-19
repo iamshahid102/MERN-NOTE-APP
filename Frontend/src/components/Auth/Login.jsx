@@ -11,7 +11,7 @@ const Login = () => {
     if (token) {
       navigate("/notes");
     }
-  }, [navigate]);
+  }, []);
 
   const API_URL = import.meta.env.VITE_API_URL;
 
