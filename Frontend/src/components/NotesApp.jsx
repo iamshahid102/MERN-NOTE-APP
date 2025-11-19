@@ -1,9 +1,11 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Cookies from "js-cookie";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 const NotesApp = () => {
+  const navigate = useNavigate();
+  // ✅ State management
   const [notes, setNotes] = useState([]);
   const [title, setTitle] = useState("");
   const [desc, setDesc] = useState("");
@@ -66,15 +68,12 @@ const NotesApp = () => {
           getNotes();
           setEditId(null);
           setMessage("✅ Note updated successfully!");
-          console.log(response.data);
         })
         .catch((error) => {
           console.error("Error updating note:", error);
         });
     } else {
       // Add new note
-
-      console.log("cookies token is here", token);
 
       axios
         .post(
@@ -87,7 +86,6 @@ const NotesApp = () => {
           }
         )
         .then((response) => {
-          console.log(response.data);
           getNotes();
           setMessage("✅ Note added successfully!");
         })
@@ -155,7 +153,8 @@ const NotesApp = () => {
             className="text-sm bg-red-700 p-1 text-white cursor-pointer"
             onClick={() => {
               Cookies.remove("token");
-              <Navigate to="/login" replace />;
+              // redirect after success
+              navigate("/login");
             }}
           >
             Logout
